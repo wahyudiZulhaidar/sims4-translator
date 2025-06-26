@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ts language="id_ID" name="Indonesia (Indonesian)" version="1.3.1" authors="wahyudiZulhaidar">
+<ts language="id_ID" name="Indonesia (Indonesian)" version="1.3.2" authors="wahyudiZulhaidar">
   <context name="EditWindow">
     <string>
       <source>Search and Edit</source>
@@ -379,7 +379,7 @@
     </string>
     <string>
       <source>Build dictionaries</source>
-      <translation>Bangun kamus</translation>
+      <translation>Buat kamus</translation>
     </string>
     <string>
       <source>Languages</source>

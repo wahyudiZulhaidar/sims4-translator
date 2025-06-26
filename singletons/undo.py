@@ -49,9 +49,10 @@ class Undo:
 
         records = {}
         for key, items in packages.items():
-            package = app_state.packages_storage.find(key)
-            records[key] = UndoRecord(items=items, modified=package.modified)
-            package.modify()
+            package = app_state.packages_storage.find(key) if app_state.packages_storage is not None else None
+            if package is not None:
+                records[key] = UndoRecord(items=items, modified=package.modified)
+                package.modify()
 
         self.__records = self.__records[-20:] + [records]
 
@@ -62,14 +63,16 @@ class Undo:
     def restore(self) -> None:
         if self.available:
             for key, record in self.__records[-1].items():
-                package = app_state.packages_storage.find(key)
+                package = app_state.packages_storage.find(key) if app_state.packages_storage is not None else None
                 if package:
                     record.restore()
                     package.modify(record.modified if package.modified else True)
             del self.__records[-1]
             self.signals.restored.emit()
 
-    def clean(self, key: str = None) -> None:
+    from typing import Optional
+
+    def clean(self, key: Optional[str] = None) -> None:
         __records = []
 
         if key:

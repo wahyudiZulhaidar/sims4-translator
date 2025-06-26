@@ -1,9 +1,20 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import sys
+import os
+
+python_base_dir = sys.base_prefix
+dlls_path = os.path.join(python_base_dir, 'DLLs')
+
+ssl_dlls = [
+    (os.path.join(dlls_path, 'libcrypto-3.dll'), '.'),
+    (os.path.join(dlls_path, 'libssl-3.dll'), '.')
+]
+
 a = Analysis(
     ['main.py'],
     pathex=[],
-    binaries=[],
+    binaries=ssl_dlls,
     datas=[('prefs', 'prefs')],
     hiddenimports=[],
     hookspath=[],
@@ -20,7 +31,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='main',
+    name='translator',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -32,6 +43,7 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon='resources/logo.ico',
+    version='version.txt'
 )
 coll = COLLECT(
     exe,
@@ -40,5 +52,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='main',
+    name='build',
 )

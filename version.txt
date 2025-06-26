@@ -1,0 +1,29 @@
+VSVersionInfo(
+  ffi=FixedFileInfo(
+    filevers=(1, 3, 2, 0),
+    prodvers=(1, 3, 2, 0),
+    
+    mask=0x3f,
+    flags=0x0,
+    OS=0x40004,
+    fileType=0x1,
+    subtype=0x0,
+    date=(0, 0)
+    ),
+  kids=[
+    StringFileInfo(
+      [
+      StringTable(
+        u'040904B0',
+        [StringStruct(u'FileVersion', u'1.3.2'),
+         StringStruct(u'CompanyName', u''),
+         StringStruct(u'FileDescription', u'Aplikasi'),
+         StringStruct(u'InternalName', u'translator'),
+         StringStruct(u'LegalCopyright', u''),
+         StringStruct(u'OriginalFilename', u'translator.exe'),
+         StringStruct(u'ProductName', u'The Sims 4 Translator'),
+         StringStruct(u'ProductVersion', u'1.3.2')])
+      ]),
+    VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
+  ]
+)

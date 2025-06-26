@@ -79,7 +79,7 @@ class Translator:
         url_free = 'https://api-free.deepl.com/v2/translate'
 
         api_key = config.value('api', 'deepl_key')
-        api_url = url_free if ":fx" in api_key else url
+        api_url = url_free if isinstance(api_key, str) and ":fx" in api_key else url
 
         language_source = languages.source
         language_dest = languages.destination

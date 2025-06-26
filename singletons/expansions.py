@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 from collections import namedtuple
 from typing import List, Dict, Union
 
 from singletons.config import config
 from singletons.interface import interface
+
+if getattr(sys, 'frozen', False):
+    base_path = sys._MEIPASS # type: ignore
+else:
+    base_path = os.path.abspath(".")
 
 
 class Expansion(namedtuple('Expansion', 'names folder')):
@@ -30,7 +36,7 @@ class Expansion(namedtuple('Expansion', 'names folder')):
         if isinstance(self.names, str):
             return interface.text('OptionsDialog', self.names)
         elif isinstance(self.names, dict):
-            key = 'name_' + config.value('interface', 'language').lower()
+            key = 'name_' + str(config.value('interface', 'language')).lower()
             return self.names.get(key, self.names.get('name_en_us', self.folder))
         else:
             return self.folder
@@ -45,14 +51,13 @@ class Expansion(namedtuple('Expansion', 'names folder')):
 
     @property
     def file_source(self) -> str:
-        return str(
-            os.path.join(config.value('dictionaries', 'gamepath'),
-                         self.folder, expansions.strings_source + '.package'))
+        game_path = str(config.value('dictionaries', 'gamepath'))
+        return str(os.path.join(game_path, self.folder, expansions.strings_source + '.package'))
 
     @property
     def file_dest(self) -> str:
-        return str(os.path.join(config.value('dictionaries', 'gamepath'),
-                                self.folder, expansions.strings_dest + '.package'))
+        game_path = str(config.value('dictionaries', 'gamepath'))
+        return str(os.path.join(game_path, self.folder, expansions.strings_dest + '.package'))
 
     @property
     def exists_source(self) -> bool:
@@ -68,7 +73,7 @@ class Expansion(namedtuple('Expansion', 'names folder')):
 
     @property
     def exists(self) -> bool:
-        path = config.value('dictionaries', 'gamepath')
+        path = str(config.value('dictionaries', 'gamepath'))
         if path:
             return os.path.exists(os.path.join(path, self.folder))
         return False
@@ -83,11 +88,11 @@ class Expansions:
     def items(self) -> List[Union[str, Expansion]]:
         baseexp = Expansion('BASE GAME', 'Data/Client')
 
-        rows = [baseexp]
+        rows: List[Union[str, Expansion]] = [baseexp]
 
-        exp = ['', 'Expansion packs']
-        game = ['', 'Game packs']
-        stuff = ['', 'Stuff packs']
+        exp: List[Union[str, Expansion]] = ['', 'Expansion packs']
+        game: List[Union[str, Expansion]] = ['', 'Game packs']
+        stuff: List[Union[str, Expansion]] = ['', 'Stuff packs']
 
         packs = self._parse_expansion_packs()
 
@@ -101,7 +106,8 @@ class Expansions:
                     stuff.append(Expansion(items, key))
 
         elif baseexp.exists_source:
-            for dirname in os.listdir(config.value('dictionaries', 'gamepath')):
+            game_path = str(config.value('dictionaries', 'gamepath'))
+            for dirname in os.listdir(game_path):
                 if dirname.upper().startswith('EP'):
                     exp.append(Expansion(dirname, dirname))
                 elif dirname.upper().startswith('GP'):
@@ -120,11 +126,11 @@ class Expansions:
 
     @property
     def strings_source(self) -> str:
-        return 'Strings_' + config.value('translation', 'source')
+        return 'Strings_' + str(config.value('translation', 'source'))
 
     @property
     def strings_dest(self) -> str:
-        return 'Strings_' + config.value('translation', 'destination')
+        return 'Strings_' + str(config.value('translation', 'destination'))
 
     def exists(self) -> List[Expansion]:
         return [exp for exp in self.items if isinstance(exp, Expansion) and exp.exists_strings]
@@ -135,8 +141,10 @@ class Expansions:
 
         self.__packs = {}
 
+        dlc_file_path = os.path.join(base_path, 'prefs', 'dlc.ini')
+
         try:
-            with open('./prefs/dlc.ini', 'r', encoding='utf-8') as fp:
+            with open(dlc_file_path, 'r', encoding='utf-8') as fp:
                 content = fp.read()
         except FileNotFoundError:
             return {}
