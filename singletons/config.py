@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import os
 import ctypes
 import ctypes.wintypes
@@ -9,6 +10,10 @@ from typing import Union
 
 from utils.constants import *
 
+if getattr(sys, 'frozen', False):
+    base_path = sys._MEIPASS  # type: ignore
+else:
+    base_path = os.path.abspath(".")
 
 def is_dark_theme():
     registry = ctypes.windll.advapi32
@@ -80,8 +85,8 @@ class ConfigManager:
         }
     }
 
-    def __init__(self) -> None:
-        self.__config_file = './prefs/config.xml'
+    def __init__(self, config_path: str) -> None:
+        self.__config_file = config_path
         self.__config = self.DEFAULTS.copy()
         self.__load()
 
@@ -127,7 +132,7 @@ class ConfigManager:
                 self.__config[section_name][option_name] = option_value
 
     @staticmethod
-    def __convert_value(value: str) -> Union[str, int, bool, None]:
+    def __convert_value(value: str | None) -> Union[str, int, bool, None]:
         if value is None:
             return ''
         if value.lower() in ['true', 'false']:
@@ -156,4 +161,5 @@ class ConfigManager:
         return self.theme_name == 'dark'
 
 
-config = ConfigManager()
+CONFIG_FILE_PATH = os.path.join(base_path, 'prefs', 'config.xml')
+config = ConfigManager(config_path=CONFIG_FILE_PATH)

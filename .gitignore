@@ -8,6 +8,7 @@ __pycache__/
 .venv
 env/
 venv/
+dist/
 
 # IDE
 .vscode/
@@ -21,3 +22,4 @@ setup.py
 *.dct
 *.svg
 *.ttf
+folder_contents.txt
