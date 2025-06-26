@@ -15,7 +15,10 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=ssl_dlls,
-    datas=[('prefs', 'prefs')],
+    datas=[
+        ('prefs', 'prefs'),
+        ('resources/fonts/OFL.txt', 'licenses'),
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
